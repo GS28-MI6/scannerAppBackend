@@ -43,7 +43,7 @@ module.exports = server => {
     console.log(req.body);
     try {
       // Authenticate User
-      const user = await auth.authenticate(usuario, password);
+      const user = await auth.authenticate(usuario, contraseña);
 
       // Create JWT
       const token = jwt.sign(JSON.parse(user), config.JWT_SECRET);
