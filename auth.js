@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const config = require("./config");
 
-exports.authenticate = (email, password) => {
+exports.authenticate = (usuario, password) => {
   var connection = config.db.get;
   const plainPass = password;
   return new Promise(async (resolve, reject) => {
@@ -9,18 +9,22 @@ exports.authenticate = (email, password) => {
       // Get user by email
       var coincidentMailInfo = [];
 
-      connection.query("select * from users WHERE `email`=?", email, function(err, rows) {
+      connection.query("select * from clientes WHERE `usuario`=?", usuario, function(err, rows) {
         if (err) {
           reject("Authentication Failed");
         } else {
           if (rows.length > 0) {
             coincidentMailInfo = rows;
-            const userPass = coincidentMailInfo[0].password;
+            const userPass = coincidentMailInfo[0].contraseña;
             bcrypt.compare(plainPass, userPass, (err, isMatch) => {
               if (!isMatch) {
                 reject("Authentication Failed");
               }else{
-                const user = JSON.stringify(coincidentMailInfo[0]);
+                data = {
+                  usuario: coincidentMailInfo[0].usuario,
+                  email: coincidentMailInfo[0].email
+                }
+                const user = JSON.stringify(data);
                 console.log(user);
                 resolve(user);
               }
