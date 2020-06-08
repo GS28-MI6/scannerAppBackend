@@ -44,7 +44,9 @@ module.exports = server => {
         ],
         function(error, results, fields) {
           if (!error) {
-            console.log("insertando nuevo")
+            cantidad = parseInt(cantidad)
+            stock = parseInt(stock)
+            console.log("insertando nuevo", stock, cantidad)
             if(cantidad > stock){
               stock = 0
             } else {
