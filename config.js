@@ -9,8 +9,8 @@ module.exports = {
   db: {
     get: mysql.createConnection({
       host: "localhost",
-      user: "root",
-      password: "",
+      user: "gs28",
+      password: "passwordScannerAppMySQL",
       database: "scanner_app_db"
     })
   },
