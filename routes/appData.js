@@ -104,7 +104,7 @@ module.exports = server => {
 
           connection.query("SELECT * FROM productos WHERE barcode=?",[barcode], function(error, results, fields){
             console.log(results, "hi there")
-            if (results === null){
+            if (results[0] === undefined){
               connection.query(
                 "INSERT INTO productos SET barcode=?, nombre=?, precio=?, stock=?",
                 [
