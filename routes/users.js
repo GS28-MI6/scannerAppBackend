@@ -16,9 +16,9 @@ module.exports = server => {
 
   
     bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(password, salt, async (err, hash) => {
+      bcrypt.hash(contraseña, salt, async (err, hash) => {
         // Hash Password
-        password = hash;
+        contraseña = hash;
         // Save User
           connection.query(
             "INSERT INTO clientes SET email=?, usuario=?, contraseña=?",
