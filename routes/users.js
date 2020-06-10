@@ -44,7 +44,6 @@ module.exports = server => {
     try {
       // Authenticate User
       const user = await auth.authenticate(usuario, contraseña);
-
       // Create JWT
       const token = jwt.sign(JSON.parse(user), config.JWT_SECRET);
 
@@ -52,7 +51,6 @@ module.exports = server => {
       // Respond with token
       //console.log(email);
       res.send(token); //LA IDEA ES MANTENER LA SESION INICIADA
-
       next();
     } catch (err) {
       if (err === "Authentication Failed") {

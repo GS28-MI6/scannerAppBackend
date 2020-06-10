@@ -96,7 +96,7 @@ module.exports = server => {
   server.post("/ingreso", function(req, res, next) {
     try {
       console.log(req.body)
-      var { barcode, nombre, precio, stock } = req.body;
+      var { barcode, nombre, precio, stock, categoria } = req.body;
 
       barcode = parseInt(barcode)
       precio = parseFloat(precio).toFixed(2);
@@ -108,12 +108,13 @@ module.exports = server => {
             console.log(results, "hi there")
             if (results[0] === undefined){
               connection.query(
-                "INSERT INTO productos SET barcode=?, nombre=?, precio=?, stock=?",
+                "INSERT INTO productos SET barcode=?, nombre=?, precio=?, stock=?, categoria=?",
                 [
                   barcode,
                   nombre,
                   precio,
-                  stock
+                  stock,
+                  categoria
                 ],
                 function(error, results, fields) {
                   if (!error) {
@@ -128,11 +129,12 @@ module.exports = server => {
               );
             } else {
               connection.query(
-                "UPDATE productos SET nombre=?, precio=?, stock=? WHERE barcode=?",
+                "UPDATE productos SET nombre=?, precio=?, stock=?, categoria=? WHERE barcode=?",
                 [
                   nombre,
                   precio,
                   stock,
+                  categoria,
                   barcode
                 ],
                 function(error, results, fields) {
