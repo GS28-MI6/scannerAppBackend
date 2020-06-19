@@ -28,6 +28,19 @@ module.exports = server => {
     });
   });
 
+  server.post("/items", function(req, res) {
+
+    console.log("hi there")
+    connection.query("SELECT * FROM productos", function(error, results, fields) {
+
+      if (error){
+        console.log(error)
+      }
+      console.log(results)
+      res.send(JSON.stringify(results));
+    });
+  });
+
   server.post("/venta", function(req, res) {
     var uuidGenerado = uuid();
     var { total } = req.body.total
