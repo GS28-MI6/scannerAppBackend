@@ -39,12 +39,11 @@ module.exports = server => {
 
     console.log(nombre, tipo, "nombre y tipo")
 
-    nombre = ""
-
     console.log("hi there")
-    connection.query("SELECT * FROM productos WHERE nombre LIKE '%'?'%' ORDER BY stock DESC",
+    connection.query("SELECT * FROM productos WHERE nombre LIKE '%'?'%' AND categoria LIKE '%'?'%' ORDER BY stock DESC",
     [
-      nombre
+      nombre,
+      tipo
     ],
     function(error, results, fields) {
 
