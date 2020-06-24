@@ -5,14 +5,6 @@ const { uuid } = require("uuidv4");
 module.exports = server => {
   var connection = config.db.get;
 
-  //rest api to get all results
-  server.get("/app", function(req, res) {
-    connection.query("SELECT * FROM alertas ORDER BY ingreso DESC", function(error, results, fields) {
-      if (error) throw error;
-      res.send(results);
-    });
-  });
-
   server.post("/item", function(req, res) {
 
     var { barcode } = req.body
@@ -31,7 +23,27 @@ module.exports = server => {
   server.post("/items", function(req, res) {
 
     console.log("hi there")
-    connection.query("SELECT * FROM productos", function(error, results, fields) {
+    connection.query("SELECT * FROM productos ORDER BY stock DESC", function(error, results, fields) {
+
+      if (error){
+        console.log(error)
+      }
+      console.log(results)
+      res.send(JSON.stringify(results));
+    });
+  });
+
+  server.post("/items_filtered", function(req, res) {
+
+    var { nombre, tipo } = req.body
+
+    console.log("hi there")
+    connection.query("SELECT * FROM productos WHERE nombre LIKE %?% AND categoria LIKE %?% ORDER BY stock DESC",
+    [
+      nombre,
+      tipo
+    ],
+    function(error, results, fields) {
 
       if (error){
         console.log(error)
