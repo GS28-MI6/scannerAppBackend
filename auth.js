@@ -21,6 +21,7 @@ exports.authenticate = (usuario, password) => {
                 reject("Authentication Failed");
               }else{
                 data = {
+                  id_cliente: coincidentMailInfo[0].id_cliente,
                   usuario: coincidentMailInfo[0].usuario,
                   email: coincidentMailInfo[0].email
                 }
