@@ -7,10 +7,10 @@ module.exports = server => {
 
   server.post("/item", function(req, res) {
 
-    var { barcode } = req.body
+    var { barcode, id_cliente } = req.body
 
     console.log("hi there")
-    connection.query("SELECT * FROM productos WHERE barcode=?",[barcode], function(error, results, fields) {
+    connection.query("SELECT * FROM productos WHERE barcode=? AND cliente=?",[barcode, id_cliente], function(error, results, fields) {
 
       if (error){
         console.log(error)
@@ -22,8 +22,10 @@ module.exports = server => {
 
   server.post("/items", function(req, res) {
 
+    var { id_cliente } = req.doby
+
     console.log("hi there")
-    connection.query("SELECT * FROM productos ORDER BY stock DESC", function(error, results, fields) {
+    connection.query("SELECT * FROM productos WHERE cliente=? ORDER BY stock DESC",[id_cliente], function(error, results, fields) {
 
       if (error){
         console.log(error)
@@ -35,15 +37,16 @@ module.exports = server => {
 
   server.post("/items_filtered", function(req, res) {
 
-    var { nombre, tipo } = req.body
+    var { nombre, tipo, id_cliente } = req.body
 
     console.log(nombre, tipo, "nombre y tipo")
 
     console.log("hi there")
-    connection.query("SELECT * FROM productos WHERE nombre LIKE ? AND categoria LIKE ? ORDER BY stock DESC",
+    connection.query("SELECT * FROM productos WHERE nombre LIKE ? AND categoria LIKE ? AND cliente=? ORDER BY stock DESC",
     [
       '%' + nombre + '%',
-      '%' + tipo + '%'
+      '%' + tipo + '%',
+      id_cliente
     ],
     function(error, results, fields) {
 
@@ -58,16 +61,18 @@ module.exports = server => {
   server.post("/venta", function(req, res) {
     var uuidGenerado = uuid();
     var { total } = req.body.total
+    var { id_cliente } = req.body
     req.body.items.map(function(item){
-      var { barcode, nombre, precio, cantidad, stock } = item
+      var { barcode, nombre, precio, cantidad, stock} = item
       connection.query(
-        "INSERT INTO ventas_productos SET barcode=?, id_ventas=?, nombre=?, precio=?, cantidad=?",
+        "INSERT INTO ventas_productos SET barcode=?, id_ventas=?, nombre=?, precio=?, cantidad=?, cliente=?",
         [
           barcode,
           uuidGenerado,
           nombre,
           precio,
-          cantidad
+          cantidad,
+          id_cliente
         ],
         function(error, results, fields) {
           if (!error) {
@@ -81,10 +86,11 @@ module.exports = server => {
             }
             console.log(stock)
             connection.query(
-              "UPDATE productos SET stock=? WHERE barcode=?",
+              "UPDATE productos SET stock=? WHERE barcode=? AND cliente=?",
               [
                 stock,
-                barcode
+                barcode,
+                id_cliente
               ],
               function(error, results, fields) {
                 if (!error) {
@@ -102,10 +108,11 @@ module.exports = server => {
       );
     })
     connection.query(
-      "INSERT INTO ventas SET id_ventas=?, total_venta=?",
+      "INSERT INTO ventas SET id_ventas=?, total_venta=?, cliente=?",
       [
         uuidGenerado,
-        total
+        total,
+        id_cliente
       ],
       function(error, results, fields) {
         if (!error) {
@@ -123,7 +130,7 @@ module.exports = server => {
   server.post("/ingreso", function(req, res, next) {
     try {
       console.log(req.body)
-      var { barcode, nombre, precio, stock, categoria } = req.body;
+      var { barcode, nombre, precio, stock, categoria, id_cliente} = req.body;
 
       barcode = parseInt(barcode)
       precio = parseFloat(precio).toFixed(2);
@@ -135,13 +142,14 @@ module.exports = server => {
             console.log(results, "hi there")
             if (results[0] === undefined){
               connection.query(
-                "INSERT INTO productos SET barcode=?, nombre=?, precio=?, stock=?, categoria=?",
+                "INSERT INTO productos SET barcode=?, nombre=?, precio=?, stock=?, categoria=?, cliente=?",
                 [
                   barcode,
                   nombre,
                   precio,
                   stock,
-                  categoria
+                  categoria,
+                  id_cliente
                 ],
                 function(error, results, fields) {
                   if (!error) {
@@ -156,13 +164,14 @@ module.exports = server => {
               );
             } else {
               connection.query(
-                "UPDATE productos SET nombre=?, precio=?, stock=?, categoria=? WHERE barcode=?",
+                "UPDATE productos SET nombre=?, precio=?, stock=?, categoria=? WHERE barcode=? AND cliente=?",
                 [
                   nombre,
                   precio,
                   stock,
                   categoria,
-                  barcode
+                  barcode,
+                  id_cliente
                 ],
                 function(error, results, fields) {
                   if (!error) {
