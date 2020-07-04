@@ -22,10 +22,8 @@ module.exports = server => {
 
   server.post("/items", function(req, res) {
 
-    var { id_cliente } = req.doby
-
     console.log("hi there")
-    connection.query("SELECT * FROM productos WHERE cliente=? ORDER BY stock DESC",[id_cliente], function(error, results, fields) {
+    connection.query("SELECT * FROM productos WHERE cliente=? ORDER BY stock DESC",[req.body.id_cliente], function(error, results, fields) {
 
       if (error){
         console.log(error)
