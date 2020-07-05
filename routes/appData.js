@@ -273,7 +273,7 @@ module.exports = server => {
     // }
 
     connection.query(
-      "SELECT SUM(total_venta) AS total_venta, DATE(fecha_venta) FROM scanner_app_db.ventas group by DATE(fecha_venta) ORDER BY fecha_venta ASC",
+      "SELECT SUM(total_venta) AS total_venta, DATE(fecha_venta) FROM scanner_app_db.ventas group by DATE(fecha_venta) ORDER BY DATE(fecha_venta) ASC",
       function(error, results, fields) {
         if (error) throw error;
         console.log(results)
