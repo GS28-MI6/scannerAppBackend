@@ -263,19 +263,17 @@ module.exports = server => {
 
   server.post("/countFiltered", function(req, res) {
 
-    var {tipo, desde, hasta} = req.body
+    // var {tipo, desde, hasta} = req.body
 
-    if (desde === undefined || desde === ""){
-      desde = "2019-12-10"
-    }
-    if(hasta === undefined || hasta === ""){
-      hasta = new Date().toISOString().split('T')[0]
-    }
-
+    // if (desde === undefined || desde === ""){
+    //   desde = "2019-12-10"
+    // }
+    // if(hasta === undefined || hasta === ""){
+    //   hasta = new Date().toISOString().split('T')[0]
+    // }
 
     connection.query(
-      "SELECT COUNT(*) AS tipo, DATE(ingreso) AS dia FROM alertas WHERE tipo = ? AND ingreso >= ? AND ingreso <= ? GROUP BY DATE(ingreso)",
-      [tipo, desde, hasta],
+      "SELECT SUM(total_venta) AS total_venta, DATE(fecha_venta) FROM scanner_app_db.ventas group by DATE(fecha_venta) ORDER BY fecha_venta ASC",
       function(error, results, fields) {
         if (error) throw error;
         console.log(results)
