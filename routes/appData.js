@@ -60,51 +60,51 @@ module.exports = server => {
     var uuidGenerado = uuid();
     var { total } = req.body.total
     var { id_cliente } = req.body
-    req.body.items.map(function(item){
-      var { barcode, nombre, precio, cantidad, stock} = item
-      connection.query(
-        "INSERT INTO ventas_productos SET barcode=?, id_ventas=?, nombre=?, precio=?, cantidad=?, cliente=?",
-        [
-          barcode,
-          uuidGenerado,
-          nombre,
-          precio,
-          cantidad,
-          id_cliente
-        ],
-        function(error, results, fields) {
-          if (!error) {
-            cantidad = parseInt(cantidad)
-            stock = parseInt(stock)
-            console.log("insertando nuevo", stock, cantidad)
-            if(cantidad > stock){
-              stock = 0
-            } else {
-              stock = stock - cantidad
-            }
-            console.log(stock)
-            connection.query(
-              "UPDATE productos SET stock=? WHERE barcode=? AND cliente=?",
-              [
-                stock,
-                barcode,
-                id_cliente
-              ],
-              function(error, results, fields) {
-                if (!error) {
-                  console.log("updateando")
-                } else {
-                  console.log("updateando error")
-                  console.log(error);
-                }
-              }
-            );
-          } else {
-            console.log(error);
-          }
-        }
-      );
-    })
+    // req.body.items.map(function(item){
+    //   var { barcode, nombre, precio, cantidad, stock} = item
+    //   connection.query(
+    //     "INSERT INTO ventas_productos SET barcode=?, id_ventas=?, nombre=?, precio=?, cantidad=?, cliente=?",
+    //     [
+    //       barcode,
+    //       uuidGenerado,
+    //       nombre,
+    //       precio,
+    //       cantidad,
+    //       id_cliente
+    //     ],
+    //     function(error, results, fields) {
+    //       if (!error) {
+    //         cantidad = parseInt(cantidad)
+    //         stock = parseInt(stock)
+    //         console.log("insertando nuevo", stock, cantidad)
+    //         if(cantidad > stock){
+    //           stock = 0
+    //         } else {
+    //           stock = stock - cantidad
+    //         }
+    //         console.log(stock)
+    //         connection.query(
+    //           "UPDATE productos SET stock=? WHERE barcode=? AND cliente=?",
+    //           [
+    //             stock,
+    //             barcode,
+    //             id_cliente
+    //           ],
+    //           function(error, results, fields) {
+    //             if (!error) {
+    //               console.log("updateando")
+    //             } else {
+    //               console.log("updateando error")
+    //               console.log(error);
+    //             }
+    //           }
+    //         );
+    //       } else {
+    //         console.log(error);
+    //       }
+    //     }
+    //   );
+    // })
     connection.query(
       "INSERT INTO ventas SET id_ventas=?, total_venta=?, cliente=?",
       [
