@@ -192,7 +192,7 @@ module.exports = server => {
 
   server.post("/countFiltered", function(req, res) {
 
-    const {id_cliente} = req.body.data
+    const {id_cliente} = req.body
 
     // var {tipo, desde, hasta} = req.body
 
