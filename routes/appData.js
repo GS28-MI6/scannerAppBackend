@@ -93,7 +93,7 @@ module.exports = server => {
           res.send(201, 201);
           res.end(JSON.stringify(results));
         } else {
-          console.log(error);
+          console.log(error, "im error");
           res.send(400, 400);
         }
       }
