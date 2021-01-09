@@ -83,6 +83,7 @@ module.exports = server => {
               function(error, results, fields) {
                 if (!error) {
                   console.log("updateando")
+                  results.end()
                 } else {
                   console.log("updateando error")
                   console.log(error);
