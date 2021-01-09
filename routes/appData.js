@@ -60,19 +60,29 @@ module.exports = server => {
     var uuidGenerado = uuid();
     var { total } = req.body.total
     var { id_cliente } = req.body
-    
-    connection.query(
-      "INSERT INTO ventas SET id_ventas=?, total_venta=?, cliente=?",
-      [
-        uuidGenerado,
-        total,
-        id_cliente
-      ],
-      function(error, results, fields) {
-        if (!error) {
-          console.log("insertando nuevo")
-          req.body.items.map(function(item){
-            var { barcode, nombre, precio, cantidad, stock} = item
+    req.body.items.map(function(item){
+      var { barcode, nombre, precio, cantidad, stock} = item
+      connection.query(
+        "INSERT INTO ventas_productos SET barcode=?, id_ventas=?, nombre=?, precio=?, cantidad=?, cliente=?",
+        [
+          barcode,
+          uuidGenerado,
+          nombre,
+          precio,
+          cantidad,
+          id_cliente
+        ],
+        function(error, results, fields) {
+          if (!error) {
+            cantidad = parseInt(cantidad)
+            stock = parseInt(stock)
+            console.log("insertando nuevo", stock, cantidad)
+            if(cantidad > stock){
+              stock = 0
+            } else {
+              stock = stock - cantidad
+            }
+            console.log(stock)
             connection.query(
               "UPDATE productos SET stock=? WHERE barcode=? AND cliente=?",
               [
@@ -89,10 +99,26 @@ module.exports = server => {
                 }
               }
             );
-          });
+          } else {
+            console.log(error);
+          }
+        }
+      );
+    })
+    connection.query(
+      "INSERT INTO ventas SET id_ventas=?, total_venta=?, cliente=?",
+      [
+        uuidGenerado,
+        total,
+        id_cliente
+      ],
+      function(error, results, fields) {
+        if (!error) {
+          console.log("insertando nuevo")
           res.send(201, 201);
+          res.end(JSON.stringify(results));
         } else {
-          console.log(error, "im error");
+          console.log(error);
           res.send(400, 400);
         }
       }
