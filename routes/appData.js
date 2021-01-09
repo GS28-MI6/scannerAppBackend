@@ -83,7 +83,6 @@ module.exports = server => {
               function(error, results, fields) {
                 if (!error) {
                   console.log("updateando")
-                  results.end()
                 } else {
                   console.log("updateando error")
                   console.log(error);
@@ -92,7 +91,6 @@ module.exports = server => {
             );
           });
           res.send(201, 201);
-          res.end(JSON.stringify(results));
         } else {
           console.log(error, "im error");
           res.send(400, 400);
