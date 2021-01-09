@@ -60,25 +60,7 @@ module.exports = server => {
     var uuidGenerado = uuid();
     var { total } = req.body.total
     var { id_cliente } = req.body
-    req.body.items.map(function(item){
-      var { barcode, nombre, precio, cantidad, stock} = item
-      connection.query(
-        "UPDATE productos SET stock=? WHERE barcode=? AND cliente=?",
-        [
-          stock,
-          barcode,
-          id_cliente
-        ],
-        function(error, results, fields) {
-          if (!error) {
-            console.log("updateando")
-          } else {
-            console.log("updateando error")
-            console.log(error);
-          }
-        }
-      );
-    });
+    
     connection.query(
       "INSERT INTO ventas SET id_ventas=?, total_venta=?, cliente=?",
       [
@@ -89,6 +71,25 @@ module.exports = server => {
       function(error, results, fields) {
         if (!error) {
           console.log("insertando nuevo")
+          req.body.items.map(function(item){
+            var { barcode, nombre, precio, cantidad, stock} = item
+            connection.query(
+              "UPDATE productos SET stock=? WHERE barcode=? AND cliente=?",
+              [
+                stock,
+                barcode,
+                id_cliente
+              ],
+              function(error, results, fields) {
+                if (!error) {
+                  console.log("updateando")
+                } else {
+                  console.log("updateando error")
+                  console.log(error);
+                }
+              }
+            );
+          });
           res.send(201, 201);
           res.end(JSON.stringify(results));
         } else {
