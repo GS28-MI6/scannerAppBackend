@@ -27,7 +27,7 @@
     "restify-errors": "^6.1.1",
     "restify-eventsource": "^2.0.0",
     "restify-jwt-community": "^1.0.8",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "uuid": "^7.0.2",
     "uuidv4": "^6.0.6"
   },
