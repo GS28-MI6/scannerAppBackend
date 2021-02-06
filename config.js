@@ -14,5 +14,5 @@ module.exports = {
       database: "scanner_app_db"
     })
   },
-  JWT_SECRET: process.env.JWT_SECRET || "secret1"
+  JWT_SECRET: process.env.JWT_SECRET || "UltraSecretPasswordk9oju8mil"
 };
