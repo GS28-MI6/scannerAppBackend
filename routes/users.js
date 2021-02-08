@@ -2,9 +2,7 @@ const errors = require("restify-errors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const auth = require("../auth");
-const authMonitoreo = require("../authMonitoreo");
 const config = require("../config");
-const configCiudadanos = require("../configCiudadanos");
 const nodeMailer = require("nodemailer");
 const { uuid } = require("uuidv4");
 
