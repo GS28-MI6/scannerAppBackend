@@ -6,31 +6,36 @@ const config = require("../config");
 const nodeMailer = require("nodemailer");
 const { uuid } = require("uuidv4");
 
-module.exports = server => {
+module.exports = (server) => {
   var connection = config.db.get;
 
   server.post("/client_register", (req, res, next) => {
     var { email, usuario, contraseña } = req.body;
 
-  
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(contraseña, salt, async (err, hash) => {
         // Hash Password
         contraseña = hash;
         // Save User
-          connection.query(
-            "INSERT INTO clientes SET email=?, usuario=?, contraseña=?",
-            [email, usuario, contraseña],
-            function(error, results, fields) {
-              if (error) {
-                console.log(error);
-                res.status(200).send({ ErrorCode: 400, Errors: ["Fallo al agregar un usuario"], Response: {error} });
-              } else {
-                let jsonResponse= JSON.stringify(results)
-                res.status(200).send({ ErrorCode: 0, Errors: [""], Response: {jsonResponse} });
-              }
+        connection.query(
+          "INSERT INTO clientes SET email=?, usuario=?, contraseña=?",
+          [email, usuario, contraseña],
+          function (error, results, fields) {
+            if (error) {
+              console.log(error);
+              res.status(200).send({
+                ErrorCode: 400,
+                Errors: ["Fallo al agregar un usuario"],
+                Response: error,
+              });
+            } else {
+              let jsonResponse = JSON.stringify(results);
+              res
+                .status(200)
+                .send({ ErrorCode: 0, Errors: [], Response: jsonResponse });
             }
-          );
+          }
+        );
       });
     });
   });
@@ -49,13 +54,17 @@ module.exports = server => {
       const { iat, exp } = jwt.decode(token);
       // Respond with token
       //console.log(email);
-      let jsonResponse= JSON.stringify(results)
-      res.status(200).send({ ErrorCode: 0, Errors: [""], Response: {token: token} });
+      let jsonResponse = JSON.stringify(results);
+      res.status(200).send({ ErrorCode: 0, Errors: [], Response: token });
       next();
     } catch (err) {
       if (err === "Authentication Failed") {
         console.log(err);
-        res.status(200).send({ ErrorCode: 401, Errors: ["Fallo al autenticar al usuario"], Response: {error} });
+        res.status(200).send({
+          ErrorCode: 401,
+          Errors: ["Fallo al autenticar al usuario"],
+          Response: error,
+        });
         // res.json({ message: err.name + ": " + err.message });
       } else {
         next(err);
@@ -63,20 +72,26 @@ module.exports = server => {
     }
   });
 
-  server.post("/tokenAuth", function(req, res) {
+  server.post("/tokenAuth", function (req, res) {
     const token = req.body.token;
     console.log(token);
     if (token) {
       jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
-        if (err) {
-          return res.status(200).send({ ErrorCode: 401, Errors: ["Token invalida"], Response: {err} });
+        if (error) {
+          return res.status(200).send({
+            ErrorCode: 401,
+            Errors: ["Token invalida"],
+            Response: error,
+          });
         } else {
           req.decoded = decoded;
-          res.status(200).send({ ErrorCode: 0, Errors: [""], Response: {decoded} });
+          res.status(200).send({ ErrorCode: 0, Errors: [], Response: decoded });
         }
       });
     } else {
-      res.status(200).send({ ErrorCode: 401, Errors: ["Token no proveida"], Response: {} });
+      res
+        .status(200)
+        .send({ ErrorCode: 401, Errors: ["Token no proveida"], Response: {} });
     }
   });
-}
+};
