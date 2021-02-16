@@ -49,7 +49,7 @@ module.exports = server => {
       const { iat, exp } = jwt.decode(token);
       // Respond with token
       //console.log(email);
-      let jsonResponse= JSON.stringify(results)
+      // let jsonResponse = JSON.stringify(results)
       res.status(200).send({ ErrorCode: 0, Errors: [""], Response: {token: token} });
       next();
     } catch (err) {
