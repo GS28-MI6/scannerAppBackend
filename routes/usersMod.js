@@ -10,8 +10,7 @@ module.exports = (server) => {
   var connection = config.db.get;
 
   server.post("/client_register", (req, res, next) => {
-    var { email, usuario, contraseña } = req.body;
-
+    const { email, usuario, contraseña } = req.body;
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(contraseña, salt, async (err, hash) => {
         // Hash Password
@@ -25,14 +24,12 @@ module.exports = (server) => {
               console.log(error);
               res.status(200).send({
                 ErrorCode: 400,
-                Errors: ["Fallo al agregar un usuario"],
+                Errors: ["Fallo al agregar el usuario."],
                 Response: error,
               });
             } else {
-              let jsonResponse = JSON.stringify(results);
-              res
-                .status(200)
-                .send({ ErrorCode: 0, Errors: [], Response: jsonResponse });
+              const Response = JSON.stringify(results);
+              res.status(200).send({ ErrorCode: 0, Errors: [], Response });
             }
           }
         );
