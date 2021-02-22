@@ -14,11 +14,11 @@ module.exports = (server) => {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(contraseña, salt, async (err, hash) => {
         // Hash Password
-        contraseña = hash;
+        const password = hash;
         // Save User
         connection.query(
           "INSERT INTO clientes SET email=?, usuario=?, contraseña=?",
-          [email, usuario, contraseña],
+          [email, usuario, password],
           function (error, results, fields) {
             if (error) {
               console.log(error);
