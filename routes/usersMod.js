@@ -25,11 +25,9 @@ module.exports = (server) => {
               res.status(200).send({
                 ErrorCode: 400,
                 Errors: ["Fallo al agregar el usuario."],
-                Response: error,
               });
             } else {
-              const Response = JSON.stringify(results);
-              res.status(200).send({ ErrorCode: 0, Errors: [], Response });
+              res.status(200).send({ ErrorCode: 0, Errors: [] });
             }
           }
         );
