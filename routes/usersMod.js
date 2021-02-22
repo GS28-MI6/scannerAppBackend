@@ -24,7 +24,7 @@ module.exports = (server) => {
               console.log(error);
               res.status(200).send({
                 ErrorCode: 400,
-                Errors: ["Fallo al agregar el usuario."],
+                Errors: ["Usuario existente."],
               });
             } else {
               res.status(200).send({ ErrorCode: 0, Errors: [] });
