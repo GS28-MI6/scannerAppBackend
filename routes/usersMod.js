@@ -49,23 +49,18 @@ module.exports = (server) => {
       // Authenticate User
       const user = await auth.authenticate(usuario, contraseña);
       // Create JWT
-      const token = jwt.sign(JSON.parse(user), config.JWT_SECRET);
-
-      const { iat, exp } = jwt.decode(token);
-      // Respond with token
-      //console.log(email);
-      // let jsonResponse = JSON.stringify(results)
-      res.status(200).send({ ErrorCode: 0, Errors: [], Token: token });
+      const Token = jwt.sign(JSON.parse(user), config.JWT_SECRET);
+      //Send response
+      res.status(200).send({ ErrorCode: 0, Errors: [], Token });
       next();
     } catch (err) {
       if (err === "Authentication Failed") {
         console.log(err);
         res.status(200).send({
           ErrorCode: 401,
-          Errors: ["Fallo al autenticar al usuario"],
-          Response: error,
+          Errors: ["Usuario y/o contraseña incorrecto/s."],
+          Token: "",
         });
-        // res.json({ message: err.name + ": " + err.message });
       } else {
         next(err);
       }
