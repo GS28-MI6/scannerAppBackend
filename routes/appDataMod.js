@@ -27,7 +27,7 @@ module.exports = (server) => {
     );
   });
 
-  server.post("/items", function (req, res) {
+  /*server.post("/items", function (req, res) {
     connection.query(
       "SELECT * FROM productos WHERE cliente=? ORDER BY stock DESC",
       [req.body.id_cliente],
@@ -46,14 +46,13 @@ module.exports = (server) => {
         }
       }
     );
-  });
+  });*/
 
-  server.post("/items_filtered", function (req, res) {
+  server.post("/productos", function (req, res) {
     const { nombre, tipo, id_cliente } = req.body;
-    console.log(nombre, tipo, "nombre y tipo");
     connection.query(
       "SELECT * FROM productos WHERE nombre LIKE ? AND categoria LIKE ? AND cliente=? ORDER BY stock DESC",
-      ["%" + nombre + "%", "%" + tipo + "%", id_cliente],
+      ["'%" + nombre + "%'", "'%" + tipo + "%'", id_cliente],
       function (error, results, fields) {
         if (error) {
           res.status(200).send({
@@ -62,10 +61,9 @@ module.exports = (server) => {
             Productos: [],
           });
         } else {
-          const jsonResponse = JSON.stringify(results);
           res
             .status(200)
-            .send({ ErrorCode: 0, Errors: [], Productos: jsonResponse });
+            .send({ ErrorCode: 0, Errors: [], Productos: results });
         }
       }
     );
