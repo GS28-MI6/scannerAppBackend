@@ -50,9 +50,21 @@ module.exports = (server) => {
 
   server.post("/productos", function (req, res) {
     const { nombre, tipo, id_cliente } = req.body;
+    const nombreTipo =
+      nombre && tipo
+        ? "nombre LIKE '%" +
+          nombre +
+          "%' AND categoria LIKE '%" +
+          tipo +
+          "%' AND"
+        : nombre
+        ? "nombre LIKE '%" + nombre + "%' AND"
+        : tipo
+        ? "categoria LIKE '%" + tipo + "%' AND"
+        : "";
     connection.query(
-      "SELECT * FROM productos WHERE nombre LIKE ? AND categoria LIKE ? AND cliente=? ORDER BY stock DESC",
-      ["'%" + nombre + "%'", "'%" + tipo + "%'", id_cliente],
+      "SELECT * FROM productos WHERE ? cliente=? ORDER BY stock DESC",
+      [nombreTipo, id_cliente],
       function (error, results, fields) {
         if (error) {
           res.status(200).send({
