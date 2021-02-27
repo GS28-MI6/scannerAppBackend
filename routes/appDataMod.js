@@ -27,26 +27,26 @@ module.exports = (server) => {
     );
   });
 
-  /*server.post("/items", function (req, res) {
+  server.post("/categorias", function (req, res) {
     connection.query(
-      "SELECT * FROM productos WHERE cliente=? ORDER BY stock DESC",
+      "SELECT DISTINCT categoria FROM productos WHERE cliente=?",
       [req.body.id_cliente],
       function (error, results, fields) {
         if (error) {
           res.status(200).send({
             ErrorCode: 400,
-            Errors: ["Fallo al obtener los productos"],
+            Errors: ["Fallo al obtener las categorías."],
             Productos: [],
           });
         } else {
-          const jsonResponse = JSON.stringify(results);
+          console.log("/categorias", results);
           res
             .status(200)
-            .send({ ErrorCode: 0, Errors: [], Productos: jsonResponse });
+            .send({ ErrorCode: 0, Errors: [], Categorias: results });
         }
       }
     );
-  });*/
+  });
 
   server.post("/productos", function (req, res) {
     const { nombre, tipo, id_cliente } = req.body;
@@ -71,7 +71,7 @@ module.exports = (server) => {
         if (error) {
           res.status(200).send({
             ErrorCode: 400,
-            Errors: ["Fallo al obtener los productos"],
+            Errors: ["Fallo al obtener los productos."],
             Productos: [],
           });
         } else {
