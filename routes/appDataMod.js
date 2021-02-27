@@ -61,6 +61,7 @@ module.exports = (server) => {
             Productos: [],
           });
         } else {
+          console.log("/productos", results);
           res
             .status(200)
             .send({ ErrorCode: 0, Errors: [], Productos: results });
