@@ -63,8 +63,10 @@ module.exports = (server) => {
         ? "categoria LIKE '%" + tipo + "%' AND"
         : "";
     connection.query(
-      "SELECT * FROM productos WHERE ? cliente=? ORDER BY stock DESC",
-      [nombreTipo, id_cliente],
+      "SELECT * FROM productos WHERE " +
+        nombreTipo +
+        " cliente=? ORDER BY stock DESC",
+      [id_cliente],
       function (error, results, fields) {
         if (error) {
           res.status(200).send({
