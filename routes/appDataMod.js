@@ -6,9 +6,7 @@ module.exports = (server) => {
   var connection = config.db.get;
 
   server.post("/item", function (req, res) {
-    var { barcode, id_cliente } = req.body;
-
-    console.log("hi there");
+    const { barcode, id_cliente } = req.body;
     connection.query(
       "SELECT * FROM productos WHERE barcode=? AND cliente=?",
       [barcode, id_cliente],
@@ -17,61 +15,70 @@ module.exports = (server) => {
           res.status(200).send({
             ErrorCode: 400,
             Errors: ["El producto no existe en la base de datos"],
-            Response: error,
+            Producto: {},
           });
         } else {
-          let jsonResponse = JSON.stringify(results);
+          const jsonResponse = JSON.stringify(results);
           res
             .status(200)
-            .send({ ErrorCode: 0, Errors: [], Response: jsonResponse });
+            .send({ ErrorCode: 0, Errors: [], Producto: jsonResponse });
         }
       }
     );
   });
 
-  server.post("/items", function (req, res) {
-    console.log("hi there");
+  server.post("/categorias", function (req, res) {
     connection.query(
-      "SELECT * FROM productos WHERE cliente=? ORDER BY stock DESC",
+      "SELECT DISTINCT categoria FROM productos WHERE cliente=?",
       [req.body.id_cliente],
       function (error, results, fields) {
         if (error) {
           res.status(200).send({
             ErrorCode: 400,
-            Errors: ["Fallo al obtener los productos"],
-            Response: error,
+            Errors: ["Fallo al obtener las categorías."],
+            Productos: [],
           });
         } else {
-          let jsonResponse = JSON.stringify(results);
+          console.log("/categorias", results);
           res
             .status(200)
-            .send({ ErrorCode: 0, Errors: [], Response: jsonResponse });
+            .send({ ErrorCode: 0, Errors: [], Categorias: results });
         }
       }
     );
   });
 
-  server.post("/items_filtered", function (req, res) {
-    var { nombre, tipo, id_cliente } = req.body;
-
-    console.log(nombre, tipo, "nombre y tipo");
-
-    console.log("hi there");
+  server.post("/productos", function (req, res) {
+    const { nombre, tipo, id_cliente } = req.body;
+    const nombreTipo =
+      nombre && tipo
+        ? "nombre LIKE '%" +
+          nombre +
+          "%' AND categoria LIKE '%" +
+          tipo +
+          "%' AND"
+        : nombre
+        ? "nombre LIKE '%" + nombre + "%' AND"
+        : tipo
+        ? "categoria LIKE '%" + tipo + "%' AND"
+        : "";
     connection.query(
-      "SELECT * FROM productos WHERE nombre LIKE ? AND categoria LIKE ? AND cliente=? ORDER BY stock DESC",
-      ["%" + nombre + "%", "%" + tipo + "%", id_cliente],
+      "SELECT * FROM productos WHERE " +
+        nombreTipo +
+        " cliente=? ORDER BY stock DESC",
+      [id_cliente],
       function (error, results, fields) {
         if (error) {
           res.status(200).send({
             ErrorCode: 400,
-            Errors: ["Fallo al obtener los productos"],
-            Response: error,
+            Errors: ["Fallo al obtener los productos."],
+            Productos: [],
           });
         } else {
-          let jsonResponse = JSON.stringify(results);
+          console.log("/productos", results);
           res
             .status(200)
-            .send({ ErrorCode: 0, Errors: [], Response: jsonResponse });
+            .send({ ErrorCode: 0, Errors: [], Productos: results });
         }
       }
     );
