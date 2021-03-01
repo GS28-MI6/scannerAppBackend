@@ -10,7 +10,7 @@ module.exports = (server) => {
   var connection = config.db.get;
 
   server.post("/client_register", (req, res, next) => {
-    var { email, usuario, contraseña } = req.body;
+    var { email, usuario, contraseña, telefono } = req.body;
 
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(contraseña, salt, async (err, hash) => {
@@ -18,8 +18,8 @@ module.exports = (server) => {
         contraseña = hash;
         // Save User
         connection.query(
-          "INSERT INTO clientes SET email=?, usuario=?, contraseña=?",
-          [email, usuario, contraseña],
+          "INSERT INTO clientes SET email=?, usuario=?, contraseña=?, telefono=?",
+          [email, usuario, contraseña, telefono],
           function (error, results, fields) {
             if (error) {
               console.log(error);
@@ -29,10 +29,9 @@ module.exports = (server) => {
                 Response: error,
               });
             } else {
-              let jsonResponse = JSON.stringify(results);
               res
                 .status(200)
-                .send({ ErrorCode: 0, Errors: [], Response: jsonResponse });
+                .send({ ErrorCode: 0, Errors: []});
             }
           }
         );
