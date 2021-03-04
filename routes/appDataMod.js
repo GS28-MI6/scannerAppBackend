@@ -7,6 +7,7 @@ module.exports = (server) => {
 
   server.post("/item", function (req, res) {
     const { barcode, id_cliente } = req.body;
+    console.log
     connection.query(
       "SELECT * FROM productos WHERE barcode=? AND cliente=?",
       [barcode, id_cliente],
@@ -15,13 +16,13 @@ module.exports = (server) => {
           res.status(200).send({
             ErrorCode: 400,
             Errors: ["El producto no existe en la base de datos"],
-            Producto: {},
+            Product: {},
           });
         } else {
           const jsonResponse = JSON.stringify(results);
           res
             .status(200)
-            .send({ ErrorCode: 0, Errors: [], Producto: jsonResponse });
+            .send({ ErrorCode: 0, Errors: [], Product: jsonResponse });
         }
       }
     );
@@ -114,7 +115,6 @@ module.exports = (server) => {
                   res.status(200).send({
                     ErrorCode: 400,
                     Errors: ["Fallo al reducir el stock"],
-                    Response: error,
                   });
                 }
               }
@@ -123,7 +123,6 @@ module.exports = (server) => {
             res.status(200).send({
               ErrorCode: 400,
               Errors: ["Fallo al insertar nueva venta"],
-              Response: error,
             });
           }
         }
@@ -138,12 +137,11 @@ module.exports = (server) => {
           let jsonResponse = JSON.stringify(results);
           res
             .status(200)
-            .send({ ErrorCode: 0, Errors: [], Response: jsonResponse });
+            .send({ ErrorCode: 0, Errors: []});
         } else {
           res.status(200).send({
             ErrorCode: 400,
             Errors: ["Fallo al realizar la venta"],
-            Response: error,
           });
         }
       }
