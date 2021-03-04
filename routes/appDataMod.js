@@ -22,7 +22,7 @@ module.exports = (server) => {
           results["quantity"] = 1
           res
             .status(200)
-            .send({ ErrorCode: 0, Errors: [], Product: results });
+            .send({ ErrorCode: 0, Errors: [], Product: results[0] });
         }
       }
     );
